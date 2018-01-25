@@ -142,8 +142,9 @@ int binarySearchOnDisk(FILE *keyInputFile, int seek, int low, int high) {
 int *linearSearchOnDisk(FILE *keyInputFile, int keyInputFileLength, int *S, int seekInputFileLength) {
 	int *hit = (int *)malloc(seekInputFileLength * (sizeof (int)));
 	int keyValue;
-	for(int i = 0; i < seekInputFileLength; i++) {
-		for(int j = 0; j < keyInputFileLength; j++) {
+	int i, j;
+	for(i = 0; i < seekInputFileLength; i++) {
+		for(j = 0; j < keyInputFileLength; j++) {
 			fseek(keyInputFile, j * (sizeof (int)), SEEK_SET);
 			fread(&keyValue, sizeof(int), 1, keyInputFile);
 			if(keyValue == S[i]) {
@@ -159,8 +160,9 @@ int *linearSearchOnDisk(FILE *keyInputFile, int keyInputFileLength, int *S, int 
 
 int *linearSearchInMemory(int *S, int *K, int seekInputFileLength, int keyInputFileLength) {
 	int *hit = (int *)malloc(seekInputFileLength * (sizeof (int)));
-    for(int i = 0; i < seekInputFileLength; i++) {
-    	for(int j = 0; j < keyInputFileLength; j++) {
+    int i, j;
+	for(i = 0; i < seekInputFileLength; i++) {
+    	for(j = 0; j < keyInputFileLength; j++) {
     		if(S[i] == K[j]) {
     			hit[i] = 1;
     			break;
