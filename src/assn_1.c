@@ -30,12 +30,12 @@ int main(int argc, char* argv[]) {
     else {
     	 struct timeval start_time, end_time;
 
-    	 FILE *keyInputFile = fopen("key.db", "rb");
+    	 FILE *keyInputFile = fopen(argv[2], "rb");
     	 fseek(keyInputFile, 0, SEEK_END); //2 * sizeof( int ), SEEK_SET
     	 int keyInputFileLength = ftell(keyInputFile);
     	 fclose(keyInputFile);
 
-    	 keyInputFile = fopen("key.db", "rb");
+    	 keyInputFile = fopen(argv[2], "rb");
     	 int *K = (int*)malloc(keyInputFileLength);
     	 int i = 0;
     	 while(!feof(keyInputFile))
@@ -47,12 +47,12 @@ int main(int argc, char* argv[]) {
 
 
     	 //printf("%d", keyInputFileLength);
-    	 FILE *seekInputFile = fopen("seek.db", "rb");
+    	 FILE *seekInputFile = fopen(argv[3], "rb");
     	 fseek(seekInputFile, 0, SEEK_END);
     	 int seekInputFileLength = ftell(seekInputFile);
     	 fclose(seekInputFile);
 
-    	 seekInputFile = fopen("seek.db", "rb");
+    	 seekInputFile = fopen(argv[3], "rb");
     	 int *S = (int*)malloc(seekInputFileLength);
     	 i = 0;
     	 while(!feof(keyInputFile))
@@ -78,12 +78,12 @@ int main(int argc, char* argv[]) {
     		 hit = linearSearchInMemory(S, K, seekInputFileLength/(sizeof (int)), keyInputFileLength/(sizeof (int)));
     	 }
     	 else if(strcmp(argv[1], "--disk-lin") == 0) {
-    		 keyInputFile = fopen("key.db", "rb");
+    		 keyInputFile = fopen(argv[2], "rb");
     		 hit = linearSearchOnDisk(keyInputFile, keyInputFileLength/(sizeof (int)), S, seekInputFileLength/(sizeof (int)));
     		 fclose(keyInputFile);
     	 }
     	 else if(strcmp(argv[1], "--disk-bin") == 0) {
-    		 keyInputFile = fopen("key.db", "rb");
+    		 keyInputFile = fopen(argv[2], "rb");
     		 int i = 0;
     		 while(i < seekInputFileLength/(sizeof (int))) {
     			 hit[i] = binarySearchOnDisk(keyInputFile, S[i], 0, keyInputFileLength/(sizeof (int)));
@@ -144,8 +144,8 @@ int *linearSearchOnDisk(FILE *keyInputFile, int keyInputFileLength, int *S, int 
 	int keyValue;
 	int i, j;
 	for(i = 0; i < seekInputFileLength; i++) {
-		for(j = 0; j < keyInputFileLength; j++) {
-			fseek(keyInputFile, j * (sizeof (int)), SEEK_SET);
+		fseek(keyInputFile, 0, SEEK_SET);
+		for(j = 0; j < keyInputFileLength; j++) {		
 			fread(&keyValue, sizeof(int), 1, keyInputFile);
 			if(keyValue == S[i]) {
 				hit[i] = 1;
